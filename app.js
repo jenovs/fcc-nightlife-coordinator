@@ -10,12 +10,14 @@ const googleMapsClient = require('@google/maps').createClient({
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/api/venues/:addr', (req, res) => {
   console.log(req.params.addr)
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(req.params.addr)}&key=${API_KEY}`
   let lat, lon;
   fetch(url)
-    .then(res => res.json())
+    .then(resp => resp.json())
     .then(data => {
       lat = data.results[0].geometry.location.lat;
       lon = data.results[0].geometry.location.lng;
@@ -25,21 +27,27 @@ app.get('/api/venues/:addr', (req, res) => {
       return googleMapsClient.placesNearby({
         location: [coords.lat, coords.lon],
         radius: 5000,
-        type: 'cafe'
+        type: 'gym'
       }).asPromise()
     })
     .then(data => {
-      console.log(data.json.results.length);
-      res.json(data.json)
+      res.json(data.json.results)
     })
     .catch(err => console.log(err));
+});
+
+app.get('/api/img/:reference', (req, res) => {
+  res.set('Content-Type', 'image/xyz');
+  const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY}&photoreference=${req.params.reference}&maxwidth=200`
+  fetch(url)
+    .then(resp => resp.body.pipe(res))
 });
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.listen(3000, () => {
   console.log('Server started on port 3000...');
