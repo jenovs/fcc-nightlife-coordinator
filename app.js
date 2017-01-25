@@ -4,6 +4,12 @@ const fetch = require('node-fetch');
 const passport = require('passport');
 const TwitterStrategy = require('passport-twitter');
 const session = require('express-session');
+const mongoose = require('mongoose');
+
+const Venues = require('./models/Venues');
+
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/GymLife');
 
 const { API_KEY, TW_API_KEY, TW_API_SECRET } = require('./credentials');
 
@@ -28,6 +34,7 @@ const checkAuth = (req, res, next) => {
   console.log('===checkAuth, req.session.passport:', req.session.passport);
 
   if (!req.isAuthenticated()) return res.send({username: null});
+  // if (!req.isAuthenticated()) return res.redirect('/auth/twitter');
   next();
 }
 
@@ -92,6 +99,28 @@ app.get('/api/img/:reference', (req, res) => {
   fetch(url)
     .then(resp => resp.body.pipe(res))
 });
+
+app.get('/api/attend/:venueId', (req, res) => {
+  console.log(req.params.venueId);
+  res.send({attendees: 0});
+});
+
+app.post('/api/attend/:venueId', checkAuth, (req, res) => {
+  console.log(req.params.venueId);
+  console.log(req.session.passport.user[1]);
+  Venues.findOne({venueId: req.params.venueId})
+    .then(data => {
+      if (!data) {
+        const newVenue = new Venues({
+          venueId: req.params.venueId,
+          attendees: [req.session.passport.user[1]]
+        })
+        return newVenue.save();
+      }
+      console.log(data);
+    })
+  // res.send({attendees: 1});
+})
 
 app.get('/api/test', checkAuth, (req, res) => {
   console.log('===api/test, req.session:', req.session);

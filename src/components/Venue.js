@@ -7,12 +7,15 @@ export default class Venue extends React.Component {
 
     this.state = {
       image: null,
-      attribute: null
+      attribute: null,
+      attend: false,
+      attendees: 0,
     }
   }
 
   componentDidMount() {
     this.fetchImage();
+    this.checkAttend();
   }
 
   fetchImage() {
@@ -34,8 +37,16 @@ export default class Venue extends React.Component {
     }
   }
 
+  checkAttend() {
+    // console.log(this.props.data.id);
+    fetch(`/api/attend/${this.props.data.id}`)
+      .then(res => res.json())
+      .then(json => console.log(json))
+      .catch(err => console.log(err));
+  }
+
   render() {
-    console.log(this.state.attribute);
+    // console.log(this.state.attribute);
     return (
       <div className="container-venue">
         <img src={this.state.image} className="img-venue"/>
@@ -51,7 +62,10 @@ export default class Venue extends React.Component {
               {this.state.attribute && <span>Photo by: <span dangerouslySetInnerHTML={{__html: this.state.attribute}}></span></span>}
             </div>
             <div>
-              <button className="btn">Attend</button>
+              {this.props.user ?
+                <button className="btn" onClick={this.props.handleAttend}>Attend</button> :
+                <a href="/auth/twitter">Attend</a>
+              }
             </div>
           </div>
         </div>
