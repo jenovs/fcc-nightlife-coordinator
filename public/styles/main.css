@@ -1,11 +1,16 @@
+
+
 .img-venue {
+  background-color: lightgray;
   border-radius: 5px;
+  margin: 5px;
   height: 100px;
   width: 100px;
 }
 
 .container-venue {
   align-items: center;
+  background-color: lightyellow;
   display: flex;
   margin: 2px auto;
   width: 30rem;
@@ -31,6 +36,8 @@
 }
 
 .venues {
+  background-color: yellow;
+  padding: 2px;
   width: 100%;
 }
 

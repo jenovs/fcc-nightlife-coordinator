@@ -15,11 +15,8 @@ export default class Venues extends React.Component {
   render() {
     return (
       <div className="venues">
-        <ul>
-          {this.mapVenues()}
-        </ul>
+        {this.mapVenues()}
       </div>
-
     )
   }
 }
