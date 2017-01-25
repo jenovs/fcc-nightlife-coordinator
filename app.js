@@ -37,8 +37,8 @@ app.get('/api/venues/:addr', (req, res) => {
 });
 
 app.get('/api/img/:reference', (req, res) => {
-  res.set('Content-Type', 'image/xyz');
-  const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY}&photoreference=${req.params.reference}&maxwidth=200`
+  // res.set('Content-Type', 'image');
+  const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY}&photoreference=${req.params.reference}&maxwidth=200&maxheight=200`
   fetch(url)
     .then(resp => resp.body.pipe(res))
 });

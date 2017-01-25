@@ -6,7 +6,8 @@ export default class Venue extends React.Component {
     super(props);
 
     this.state = {
-      image: null
+      image: null,
+      attribute: null
     }
   }
 
@@ -22,7 +23,8 @@ export default class Venue extends React.Component {
         const img = new Image();
         const src = URL.createObjectURL(blob)
         this.setState({
-          image: src
+          image: src,
+          attribute: this.props.data.photos[0].html_attributions[0]
         })
       })
     } else {
@@ -33,11 +35,26 @@ export default class Venue extends React.Component {
   }
 
   render() {
-
+    console.log(this.state.attribute);
     return (
-      <div>
-        {this.props.data.name}
-        <img src={this.state.image} />
+      <div className="container-venue">
+        <img src={this.state.image} className="img-venue"/>
+        <div className="venue-descr">
+          <div className="venue-name">
+            {this.props.data.name}
+          </div>
+          <div>
+            {this.props.data.vicinity}
+          </div>
+          <div className="attr-data">
+            <div className="photo-attribute">
+              {this.state.attribute && <span>Photo by: <span dangerouslySetInnerHTML={{__html: this.state.attribute}}></span></span>}
+            </div>
+            <div>
+              <button className="btn">Attend</button>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

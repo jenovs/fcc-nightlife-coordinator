@@ -1,0 +1,44 @@
+.img-venue {
+  border-radius: 5px;
+  height: 100px;
+  width: 100px;
+}
+
+.container-venue {
+  align-items: center;
+  display: flex;
+  margin: 2px auto;
+  width: 30rem;
+}
+
+.venue-descr {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.venue-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.btn {
+  flex: 1;
+  width: 5rem;
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+.venues {
+  width: 100%;
+}
+
+.photo-attribute {
+  font-size: 0.8rem;
+  flex: auto;
+}
+.attr-data {
+  display: flex;
+  flex: 1;
+}

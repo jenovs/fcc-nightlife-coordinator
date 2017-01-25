@@ -15,6 +15,9 @@ export default class App extends React.Component {
   }
 
   handleSearch(str) {
+    this.setState({
+      venues: []
+    });
     fetch(`/api/venues/${str}`)
       .then(res => res.json())
       .then(json => {
@@ -27,6 +30,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    console.log('App state', this.state.venues);
     return (
       <div>
         <Search submitSearch={this.handleSearch} />
