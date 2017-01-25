@@ -14,6 +14,14 @@ export default class App extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
   }
 
+  componentWillMount() {
+    fetch('/api/checkAuth', {
+      credentials: 'include'
+    })
+      .then(res => res.json())
+      .then(json => this.setState({user: json.username}))
+  }
+
   handleSearch(str) {
     this.setState({
       venues: []
@@ -30,7 +38,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log('App state', this.state.venues);
+    console.log('App state', this.state);
     return (
       <div>
         <a href="/auth/twitter">Sign in with Twitter</a>

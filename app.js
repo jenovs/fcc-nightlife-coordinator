@@ -18,14 +18,16 @@ passport.use(new TwitterStrategy({
   callbackURL: 'http://localhost:3000/auth/twitter/callback'
 },
   function(token, tokenSecret, profile, done) {
-    console.log(profile.id, profile.username);
-    done(null, profile.username);
+    // console.log(profile.id, profile.username);
+    done(null, [profile.id, profile.username]);
   }));
 
 const app = express();
 
 const checkAuth = (req, res, next) => {
-  if (!req.isAuthenticated()) return res.redirect('/');
+  console.log('===checkAuth, req.session.passport:', req.session.passport);
+
+  if (!req.isAuthenticated()) return res.send({username: null});
   next();
 }
 
@@ -41,18 +43,25 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
-  console.log('serializeUser');
+  console.log('===serializeUser', user);
   done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-  console.log('deserializeUser');
+  console.log('===deserializeUser', user);
   done(null, user);
 });
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
-app.get('/auth/twitter/callback', passport.authenticate('twitter', {successRedirect: '/', failureRedirect: '/fail'}));
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', {failureRedirect: '/fail'}),
+  (req, res, next) => {
+    console.log('===twitter callback', req.session);
+    // req.session.user = req.session.passport.user;
+    res.redirect('/');
+  }
+);
 
 app.get('/api/venues/:addr', (req, res) => {
   console.log(req.params.addr)
@@ -85,13 +94,17 @@ app.get('/api/img/:reference', (req, res) => {
 });
 
 app.get('/api/test', checkAuth, (req, res) => {
-  console.log(req.session);
+  console.log('===api/test, req.session:', req.session);
   console.log(req.isAuthenticated());
   res.send('You are authenticated!')
 });
 
+app.get('/api/checkAuth', checkAuth, (req, res) => {
+  console.log('===GET checkAuth', req.session);
+  res.send({username: req.session.passport.user[1]})
+})
+
 app.get('*', (req, res) => {
-  console.log(req.session);
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
