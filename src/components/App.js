@@ -33,6 +33,9 @@ export default class App extends React.Component {
     console.log('App state', this.state.venues);
     return (
       <div>
+        <a href="/auth/twitter">Sign in with Twitter</a>
+        <br/>
+        <a href="/api/test">Test authentication</a>
         <Search submitSearch={this.handleSearch} />
         <Venues venues={this.state.venues}/>
       </div>
