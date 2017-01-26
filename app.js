@@ -5,12 +5,9 @@ const passport = require('passport');
 const TwitterStrategy = require('passport-twitter');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-const Venues = require('./models/Venues');
-
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/GymLife');
-
+const Venue = require('./models/Venue');
 const { API_KEY, TW_API_KEY, TW_API_SECRET } = require('./credentials');
 
 const googleMapsClient = require('@google/maps').createClient({
@@ -18,23 +15,25 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: global.Promise
 });
 
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/GymLife');
+
 passport.use(new TwitterStrategy({
   consumerKey: TW_API_KEY,
   consumerSecret: TW_API_SECRET,
   callbackURL: 'http://localhost:3000/auth/twitter/callback'
 },
   function(token, tokenSecret, profile, done) {
-    // console.log(profile.id, profile.username);
     done(null, [profile.id, profile.username]);
   }));
 
 const app = express();
+app.use(bodyParser.json());
 
 const checkAuth = (req, res, next) => {
   console.log('===checkAuth, req.session.passport:', req.session.passport);
 
   if (!req.isAuthenticated()) return res.send({username: null});
-  // if (!req.isAuthenticated()) return res.redirect('/auth/twitter');
   next();
 }
 
@@ -70,8 +69,14 @@ app.get('/auth/twitter/callback',
   }
 );
 
+const getImgSrc = (ref) => {
+  const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY}&photoreference=${ref}&maxwidth=100&maxheight=100`;
+  return fetch(url)
+}
+
+// Search Google Places by address
 app.get('/api/venues/:addr', (req, res) => {
-  console.log(req.params.addr)
+  // console.log(req.params.addr)
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(req.params.addr)}&key=${API_KEY}`
   let lat, lon;
   fetch(url)
@@ -88,44 +93,109 @@ app.get('/api/venues/:addr', (req, res) => {
         type: 'gym'
       }).asPromise()
     })
+    // List of places received
     .then(data => {
-      res.json(data.json.results)
+      req.rawData = data.json.results;
+      // Check if there are corresponding records in db
+      const promArr = data.json.results.map(result => {
+        return Venue.findOne({venueId: result.id})
+      })
+      return Promise.all(promArr)
     })
+    // Merge list of attendees with fetched data
+    .then(dbData => {
+      let attendList = {}
+      dbData.map(i => {
+        if (i) attendList[i.venueId] = i.attendees;
+      })
+      req.rawData = req.rawData.map((venue, i, arr) => {
+        venue.attendees = attendList[venue.id] || [];
+        return venue;
+      })
+      return;
+    })
+    // Get src for images
+    .then(() => {
+      return new Promise((resolve) => {
+        let temp = {};
+        const len = req.rawData.length;
+        count = 0;
+        req.rawData.forEach(i => {
+          if (i.photos) {
+            getImgSrc(i.photos[0].photo_reference).then(data => {
+              temp[i.id] = data.url
+              count++;
+              if (count === len) resolve(temp)
+            })
+          } else {
+            count++;
+          }
+        });
+      });
+    })
+    // Filter fetched array and add img src
+    .then(imgSrc => {
+      let results = [];
+      req.rawData.forEach(i => {
+        const result = {
+          venueName: i.name,
+          venueId: i.id,
+          venueAddress: i.vicinity,
+          rating: i.rating || null,
+          imgSrc: i.photos && imgSrc[i.id],
+          imgRef: i.photos && i.photos[0].html_attributions[0],
+        }
+        results.push(result);
+      })
+      return results;
+    })
+    .then(results => res.send(results))
     .catch(err => console.log(err));
 });
 
-app.get('/api/img/:reference', (req, res) => {
-  const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY}&photoreference=${req.params.reference}&maxwidth=200&maxheight=200`
-  fetch(url)
-    .then(resp => resp.body.pipe(res))
-});
+// app.get('/api/img/:reference', (req, res) => {
+//   const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY}&photoreference=${req.params.reference}&maxwidth=100&maxheight=100`
+//   fetch(url)
+//     .then(resp => resp.body.pipe(res))
+// });
 
 app.get('/api/attend/:venueId', (req, res) => {
   console.log(req.params.venueId);
-  res.send({attendees: 0});
+  Venue.findOne({venueId: req.params.venueId})
+    .then(data => {
+      if (!data) return res.send({attendees: 0})
+      res.send({attendees: data.attendees.length})
+    })
+    .catch(err => console.log(err));
 });
 
 app.post('/api/attend/:venueId', checkAuth, (req, res) => {
   console.log(req.params.venueId);
   console.log(req.session.passport.user[1]);
-  Venues.findOne({venueId: req.params.venueId})
+  console.log('req.body', req.body);
+  Venue.findOne({venueId: req.params.venueId})
     .then(data => {
       if (!data) {
-        const newVenue = new Venues({
+        const newVenue = new Venue({
           venueId: req.params.venueId,
+          venueName: req.body.venueName,
           attendees: [req.session.passport.user[1]]
         })
         return newVenue.save();
+      } else {
+        if (data.attendees.indexOf(req.session.passport.user[1]) !== -1) return data;
+        data.attendees.push(req.session.passport.user[1])
+        const updatedData = {
+          venueId: data.venueId,
+          venueName: data.venueName,
+          attendees: data.attendees
+        }
+        return Venue.findOneAndUpdate({venueId: data.venueId}, updatedData)
       }
-      console.log(data);
+      // console.log(data);
     })
+    .then(data => res.send({attendees: data.attendees.length}))
   // res.send({attendees: 1});
-})
-
-app.get('/api/test', checkAuth, (req, res) => {
-  console.log('===api/test, req.session:', req.session);
-  console.log(req.isAuthenticated());
-  res.send('You are authenticated!')
 });
 
 app.get('/api/checkAuth', checkAuth, (req, res) => {

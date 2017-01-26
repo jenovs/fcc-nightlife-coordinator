@@ -4,8 +4,8 @@ import Venue from './Venue';
 
 export default class Venues extends React.Component {
 
-  handleAttend(id) {
-    this.props.handleAttend(id);
+  handleAttend(id, venueName) {
+    this.props.handleAttend(id, venueName);
   }
 
   mapVenues() {
@@ -14,8 +14,9 @@ export default class Venues extends React.Component {
         <Venue
           key={id}
           data={venue}
-          handleAttend={this.handleAttend.bind(this, venue.id)}
+          handleAttend={this.handleAttend.bind(this, venue.id, venue.name)}
           user={this.props.user}
+          a={this.props.a}
         />
       )
     })

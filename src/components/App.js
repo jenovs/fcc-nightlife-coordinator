@@ -11,13 +11,8 @@ export default class App extends React.Component {
       venues: []
     };
 
-
-
-
     this.handleSearch = this.handleSearch.bind(this);
     this.handleAttend = this.handleAttend.bind(this);
-
-
   }
 
   componentWillMount() {
@@ -48,13 +43,23 @@ export default class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  handleAttend(id) {
+  handleAttend(id, venueName) {
+    // console.log('venueName', venueName);
     fetch(`/api/attend/${id}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
       method: 'POST',
-      credentials: 'include'
+      credentials: 'include',
+      body: JSON.stringify({venueName})
     })
       .then(res => res.json())
-      .then(json => console.log(json))
+      .then(json => {
+        console.log(this.state.venues);
+        this.setState({
+          a: 0
+        })
+      })
       .catch(err => console.log(err));
   }
 
@@ -67,7 +72,7 @@ export default class App extends React.Component {
           <span>Welcome @{this.state.username}</span>
         }
         <Search submitSearch={this.handleSearch} />
-        <Venues venues={this.state.venues} handleAttend={this.handleAttend} user={this.state.username}/>
+        <Venues a={this.state.a} venues={this.state.venues} handleAttend={this.handleAttend} user={this.state.username}/>
       </div>
     )
   }

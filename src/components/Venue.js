@@ -18,6 +18,10 @@ export default class Venue extends React.Component {
     this.checkAttend();
   }
 
+  componentWillReceiveProps(newProps) {
+    this.checkAttend();
+  }
+
   fetchImage() {
     if (this.props.data.photos) {
       fetch(`/api/img/${this.props.data.photos[0].photo_reference}`)
@@ -41,12 +45,15 @@ export default class Venue extends React.Component {
     // console.log(this.props.data.id);
     fetch(`/api/attend/${this.props.data.id}`)
       .then(res => res.json())
-      .then(json => console.log(json))
+      .then(json => {
+        this.setState({
+          attendees: json.attendees
+        })
+      })
       .catch(err => console.log(err));
   }
 
   render() {
-    // console.log(this.state.attribute);
     return (
       <div className="container-venue">
         <img src={this.state.image} className="img-venue"/>
@@ -56,6 +63,9 @@ export default class Venue extends React.Component {
           </div>
           <div>
             {this.props.data.vicinity}
+          </div>
+          <div className="will-attend">
+            {this.state.attendees} will attend.
           </div>
           <div className="attr-data">
             <div className="photo-attribute">
