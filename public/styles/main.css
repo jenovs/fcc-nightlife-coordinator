@@ -1,19 +1,38 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+.header-div {
+  color: #333;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem auto;
+  text-align: center;
+}
 
 .img-venue {
   background-color: lightgray;
   border-radius: 5px;
   margin: 5px;
   height: 100px;
+  opacity: 1;
+  transition: all 1s;
   width: 100px;
 }
 
-.container-venue {
+.loading {
+  opacity: 0.2
+}
+
+.venue-container {
   align-items: center;
-  background-color: lightyellow;
+  background-color: lightgray;
   display: flex;
   margin: 2px auto;
-  width: 30rem;
+  max-width: 50rem;
+  width: 100%;
 }
 
 .venue-descr {
@@ -28,19 +47,61 @@
   font-weight: bold;
 }
 .will-attend {
+  color: #222;
   align-self: flex-end;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .btn {
+  display: inline-block;
+  background-color: gray;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
   flex: 1;
+  font-size: 14px;
   width: 5rem;
   margin-left: auto;
-  align-self: flex-end;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
 }
 
-.venues {
-  padding: 2px;
-  width: 100%;
+.btn-danger {
+  background-color: #d9534f;
+  border: 1px solid #d43f3a;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c;
+  border: 1px solid #ac2925;
+}
+
+.btn-primary {
+  align-self: flex-end;
+  background-color: #337ab7;
+  border: 1px solid #2e6da4;
+}
+
+.btn-primary:hover {
+  background-color: #286090;
+  border: 1px solid #204d74;
+  text-decoration: none;
+}
+
+.btn-search {
+  background-color: transparent;
+  border: none;
+  color: #222;
+  font-size: 1.5rem;
+  outline: none;
+}
+
+.btn-search:focus {
+  text-shadow: 1px 1px 2px cornflowerblue;
 }
 
 .photo-attribute {
@@ -50,4 +111,40 @@
 .attr-data {
   display: flex;
   flex: 1;
+}
+
+.search-div {
+  align-items: center;
+  display: flex;
+  height: 3rem;
+  justify-content: center;
+}
+
+.search-div input {
+  font-size: 1.5rem;
+  border: 1px solid transparent;
+  border-bottom: 1px solid darkgray;
+  padding-left: 0.5rem;
+  /*height: 2rem;*/
+}
+
+.search-div input:focus {
+  outline: none;
+  border: 1px solid transparent;
+  border-bottom: 2px solid cornflowerblue;
+}
+
+.searching {
+  color: darkgray;
+  font-size: 5rem;
+  text-align: center;
+}
+
+.venues {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 2px;
+  width: 100%;
 }

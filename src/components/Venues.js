@@ -14,19 +14,25 @@ export default class Venues extends React.Component {
         <Venue
           key={id}
           data={venue}
-          handleAttend={this.handleAttend.bind(this, venue.id, venue.name)}
+          handleAttend={this.handleAttend.bind(this, venue.venueId, venue.venueName)}
           user={this.props.user}
-          a={this.props.a}
         />
       )
     })
   }
 
   render() {
-    return (
-      <div className="venues">
-        {this.mapVenues()}
-      </div>
-    )
+    if (this.props.searching) {
+      return (
+        <div className="searching">
+          <p>Loading...</p>
+        </div>
+      )
+    } else {
+      return (
+        <div className="venues">
+          {this.mapVenues()}
+        </div>)
+    }
   }
 }

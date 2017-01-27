@@ -1,80 +1,86 @@
 import React from 'react';
 
 export default class Venue extends React.Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
-      image: null,
-      attribute: null,
-      attend: false,
-      attendees: 0,
+      imgSrc: null,
+      imgClass: 'img-venue loading',
+      user: this.props.user,
+      attending: false
     }
   }
 
-  componentDidMount() {
-    this.fetchImage();
-    this.checkAttend();
+  componentWillMount() {
+    if (this.props.data.imgSrc) {
+      fetch(`/api/fetchImg/${this.props.data.imgSrc}`)
+        .then(data => data.text())
+        .then(imgSrc => this.setState({
+          imgSrc,
+          imgClass: 'img-venue'
+        }))
+    } else {
+      this.setState({
+        imgSrc: '/img/noPhoto.png',
+        imgClass: 'img-venue'
+      })
+    }
   }
 
   componentWillReceiveProps(newProps) {
-    this.checkAttend();
-  }
-
-  fetchImage() {
-    if (this.props.data.photos) {
-      fetch(`/api/img/${this.props.data.photos[0].photo_reference}`)
-      .then(res => res.blob())
-      .then(blob => {
-        const img = new Image();
-        const src = URL.createObjectURL(blob)
-        this.setState({
-          image: src,
-          attribute: this.props.data.photos[0].html_attributions[0]
-        })
-      })
-    } else {
-      this.setState({
-        image: '/img/noPhoto.png'
-      })
+    console.log('receiving props');
+    if (newProps.user) {
+      const ind = newProps.data.attendees.indexOf(newProps.user);
+      if (ind !== -1) this.setState({attending: true})
+      else this.setState({attending: false})
+      // console.log('index in attendees', ind);
+      // console.log(newProps.user, newProps.data);
     }
   }
 
-  checkAttend() {
-    // console.log(this.props.data.id);
-    fetch(`/api/attend/${this.props.data.id}`)
-      .then(res => res.json())
-      .then(json => {
-        this.setState({
-          attendees: json.attendees
-        })
-      })
-      .catch(err => console.log(err));
-  }
-
   render() {
+    console.log('state', this.state.attending);
+    const { venueName, venueAddress, imgRef, imgSrc, rating, attendees } = this.props.data;
+    const user = this.props.user;
+    const attending = this.state.attending;
+    const handleAttend = this.props.handleAttend;
+
+    function generateButton() {
+      console.log(user);
+      if (user) {
+        if (attending) {
+          return (<button className="btn btn-primary" onClick={handleAttend}>Attend1</button>)
+        } else {
+          return (<button className="btn btn-primary" onClick={handleAttend}>Attend2</button>)
+        }
+      } else {
+        return (<a className="btn btn-primary" href="/auth/twitter">Attend3</a>)
+      }
+    }
+    const btnClass = this.state.attending ? 'btn btn-danger' : 'btn btn-primary'
     return (
-      <div className="container-venue">
-        <img src={this.state.image} className="img-venue"/>
+      <div className="venue-container">
+        <img src={this.state.imgSrc || '/img/loading.png'} className={this.state.imgClass}/>
         <div className="venue-descr">
           <div className="venue-name">
-            {this.props.data.name}
+            {venueName}
           </div>
           <div>
-            {this.props.data.vicinity}
+            {venueAddress}
           </div>
           <div className="will-attend">
-            {this.state.attendees} will attend.
+            {attendees.length}{attendees.length === 1 ? ' is' : ' are' } going.
           </div>
           <div className="attr-data">
             <div className="photo-attribute">
-              {this.state.attribute && <span>Photo by: <span dangerouslySetInnerHTML={{__html: this.state.attribute}}></span></span>}
+              {imgRef && <span>Photo by: <span dangerouslySetInnerHTML={{__html: imgRef}}></span></span>}
             </div>
             <div>
+              {/* {generateButton()} */}
               {this.props.user ?
-                <button className="btn" onClick={this.props.handleAttend}>Attend</button> :
-                <a href="/auth/twitter">Attend</a>
+                <button className={btnClass} onClick={this.props.handleAttend}>{this.state.attending ? 'Remove' : 'Attend'}</button>:
+                <a className="btn btn-primary" href="/auth/twitter">Attend</a>
               }
             </div>
           </div>

@@ -28,10 +28,10 @@ export default class Search extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="search-div">
         <form onSubmit={this.handleSubmit}>
-          <input onChange={this.handleChange} value={this.state.search} autoFocus />
-          <button>Search</button>
+          <input onChange={this.handleChange} value={this.state.search} autoFocus placeholder="Enter address to search..."/>
+          <button className="btn-search">&#128270;</button>
         </form>
       </div>
     )
