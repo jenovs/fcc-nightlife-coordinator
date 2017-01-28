@@ -29,7 +29,7 @@ export default class Venue extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log('receiving props');
+    // console.log('receiving props');
     if (newProps.user) {
       const ind = newProps.data.attendees.indexOf(newProps.user);
       if (ind !== -1) this.setState({attending: true})
@@ -40,7 +40,7 @@ export default class Venue extends React.Component {
   }
 
   render() {
-    console.log('state', this.state.attending);
+    // console.log('state', this.state.attending);
     const { venueName, venueAddress, imgRef, imgSrc, rating, attendees } = this.props.data;
     const user = this.props.user;
     const attending = this.state.attending;

@@ -5,9 +5,11 @@
 }
 
 header {
-  background-color: #eee;
+  /*background-color: #eee;*/
   display: flex;
   flex-direction: column;
+  margin: auto;
+  max-width: 70rem;
   padding: 1rem;
 }
 
@@ -36,6 +38,30 @@ header {
 .login-link {
   font-weight: bold;
   font-size: 1.2rem;
+}
+
+.radios-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.radios-div label {
+  background-color: lightgray;
+  border-radius: 5px;
+  color: #444;
+  font-weight: bold;
+  margin-right: 2rem;
+  padding: 5px 8px;
+}
+
+.radios-div input:checked + label {
+  background-color: cornflowerblue;
+  color: white;
+}
+
+.radios-div input {
+  display: none;
 }
 
 .venue-container {
@@ -143,7 +169,8 @@ header {
 .search-div input:focus {
   outline: none;
   border: 1px solid transparent;
-  border-bottom: 2px solid cornflowerblue;
+  /*border-bottom: 2px solid cornflowerblue;*/
+  box-shadow: 0px 2px 2px -1px cornflowerblue;
 }
 
 .searching {

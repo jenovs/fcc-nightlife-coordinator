@@ -90,7 +90,7 @@ app.get('/auth/logout', (req, res) => {
   res.redirect('/')
 })
 
-app.get('/api/venues/:addr', (req, res) => {
+app.get('/api/venues/:addr/:venueType', (req, res) => {
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(req.params.addr)}&key=${API_KEY}`
   let lat, lon;
   fetch(url)
@@ -104,7 +104,7 @@ app.get('/api/venues/:addr', (req, res) => {
       return googleMapsClient.placesNearby({
         location: [coords.lat, coords.lon],
         radius: 3000,
-        type: 'gym'
+        type: req.params.venueType
       }).asPromise()
     })
 

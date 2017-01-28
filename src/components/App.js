@@ -9,8 +9,10 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
+      search: '',
       venues: [],
-      searching: false
+      searching: false,
+      venueType: 'cafe'
     };
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -18,8 +20,15 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    const str = sessionStorage.getItem('search');
-    if (str) this.handleSearch(str)
+    const storage = JSON.parse(sessionStorage.getItem('search'));
+    let search, venueType;
+    // console.log(x);
+    if (storage) ({ search, venueType } = storage);
+    // const { search, venueType } = JSON.parse(sessionStorage.getItem('search')) ;
+    // const str = JSON.parse(sessionStorage.getItem('search')).search;
+    // const venueType =
+    // console.log(search, venueType);
+    if (search) this.handleSearch(search, venueType)
     fetch('/api/checkAuth', {
       credentials: 'include'
     })
@@ -27,14 +36,16 @@ export default class App extends React.Component {
       .then(json => this.setState({username: json.username}))
   }
 
-  handleSearch(str) {
+  handleSearch(search, venueType) {
+    console.log('App searching for:', search, venueType);
     this.setState({
+      venueType,
+      search,
       venues: [],
-      search: str,
-      searching: true
+      searching: true,
     });
-    sessionStorage.setItem('search', str)
-    fetch(`/api/venues/${str}`)
+    sessionStorage.setItem('search', JSON.stringify({search: search, venueType: venueType}))
+    fetch(`/api/venues/${search}/${venueType}`)
       .then(res => res.json())
       .then(json => {
         console.log('setting search data');
@@ -74,11 +85,14 @@ export default class App extends React.Component {
   }
 
   render() {
+    console.log('App state', this.state);
     return (
       <div>
 
         <Header user={this.state.username} />
-        <Search submitSearch={this.handleSearch} />
+        <Search submitSearch={this.handleSearch}
+          search={this.state.search}
+          venueType={this.state.venueType}/>
         <Venues searching={this.state.searching}
           venues={this.state.venues}
           handleAttend={this.handleAttend}
