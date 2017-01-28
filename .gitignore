@@ -2,4 +2,5 @@ node_modules
 playground
 
 public/js/bundle.js
+config/config.json
 credentials.js
