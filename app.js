@@ -48,7 +48,6 @@ const app = express();
 app.use(bodyParser.json());
 
 const checkAuth = (req, res, next) => {
-  // console.log('===checkAuth, req.session.passport:', req.session.passport);
   if (!req.isAuthenticated()) return res.send({username: null});
   next();
 }
@@ -65,12 +64,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
-  console.log('===serializeUser', user);
   done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-  console.log('===deserializeUser', user);
   done(null, user);
 });
 
@@ -79,8 +76,6 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback',
   passport.authenticate('twitter', {failureRedirect: '/fail'}),
   (req, res, next) => {
-    // console.log('===twitter callback', req.session);
-    // req.session.user = req.session.passport.user;
     res.redirect('/');
   }
 );
@@ -96,7 +91,6 @@ app.get('/api/venues/:addr/:venueType', (req, res) => {
   fetch(url)
     .then(resp => resp.json())
     .then(data => {
-      console.log(data.status);
       if (data.status === 'OK') {
         lat = data.results[0].geometry.location.lat;
         lon = data.results[0].geometry.location.lng;
@@ -147,10 +141,8 @@ app.post('/api/attendees', (req, res) => {
     .then(dbData => {
       let attendList = {}
       dbData.forEach(i => {
-        // console.log(i);
         if (i) attendList[i.venueId] = i.attendees;
       })
-      // console.log(attendList);
       const results = req.body.map((venue, i) => {
         venue.attendees = attendList[venue.venueId] || [];
         return venue;
@@ -194,7 +186,6 @@ app.post('/api/attend/:venueId', checkAuth, (req, res) => {
 });
 
 app.get('/api/checkAuth', checkAuth, (req, res) => {
-  console.log('===GET checkAuth', req.session);
   res.send({username: req.session.passport.user[1]})
 })
 

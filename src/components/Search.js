@@ -24,7 +24,6 @@ export default class Search extends React.Component {
     e.preventDefault();
     if (this.state.search) {
       this.props.submitSearch(this.state.search, this.state.venueType);
-      // this.setState({search: ''});
     }
   }
 
@@ -34,11 +33,6 @@ export default class Search extends React.Component {
     })
     if (this.state.search) this.props.submitSearch(this.state.search, e.nativeEvent.target.value);
   }
-
-  // handleClick(e) {
-  //   console.log('click');
-  //
-  // }
 
   render() {
     const { venueType } = this.state;

@@ -29,24 +29,20 @@ export default class Venue extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    // console.log('receiving props');
     if (newProps.username) {
       const ind = newProps.data.attendees.indexOf(newProps.username);
       if (ind !== -1) this.setState({attending: true})
       else this.setState({attending: false})
-      // console.log('index in attendees', ind);
-      // console.log(newProps.user, newProps.data);
     }
   }
 
   render() {
-    // console.log('state', this.state.attending);
     const { venueName, venueAddress, imgRef, imgSrc, rating, attendees } = this.props.data;
     const username = this.props.username;
     const attending = this.state.attending;
     const handleAttend = this.props.handleAttend;
+    const btnClass = this.state.attending ? 'btn btn-danger' : 'btn btn-primary';
 
-    const btnClass = this.state.attending ? 'btn btn-danger' : 'btn btn-primary'
     return (
       <div className="venue-container">
         <img src={this.state.imgSrc || '/img/loading.png'} className={this.state.imgClass}/>
@@ -58,7 +54,6 @@ export default class Venue extends React.Component {
             {venueAddress}
           </div>
           <div className="will-attend">
-            {/* {attendees.length}{attendees.length === 1 ? ' is' : ' are' } going. */}
             {attendees.length} will attend.
           </div>
           <div className="attr-data">

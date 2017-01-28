@@ -35,7 +35,6 @@ export default class App extends React.Component {
   }
 
   handleSearch(search, venueType) {
-    console.log('App searching for:', search, venueType);
     this.setState({
       venueType,
       search,
@@ -48,13 +47,11 @@ export default class App extends React.Component {
       .then(res => res.json())
       .then(json => {
         if (!json.error) {
-          console.log('setting search data');
           this.setState({
             venues: json,
             searching: false
           }, this.fetchAttendees)
         } else {
-          console.log('nothing found :(');
           this.setState({
             noResults: true,
             searching: false
@@ -98,7 +95,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log('App state', this.state);
     return (
       <div className="container">
         <Header user={this.state.username} />
