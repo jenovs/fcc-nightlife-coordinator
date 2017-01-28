@@ -15,6 +15,7 @@ const Venue = require('./models/Venue');
 
 const {
   API_KEY,
+  API_KEY_IMG,
   MONGODB_URI,
   PORT,
   TW_API_KEY,
@@ -28,7 +29,7 @@ const googleMapsClient = require('@google/maps').createClient({
 });
 
 const getImgSrc = (ref) => {
-  const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY}&photoreference=${ref}&maxwidth=100&maxheight=100`;
+  const url = `https://maps.googleapis.com/maps/api/place/photo?key=${API_KEY_IMG}&photoreference=${ref}&maxwidth=100&maxheight=100`;
   return fetch(url)
 }
 
