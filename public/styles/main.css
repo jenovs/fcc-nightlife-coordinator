@@ -4,6 +4,13 @@
   padding: 0;
 }
 
+header {
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
 .header-div {
   color: #333;
   font-size: 2rem;
@@ -24,6 +31,11 @@
 
 .loading {
   opacity: 0.2
+}
+
+.login-link {
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .venue-container {
@@ -140,6 +152,12 @@
   text-align: center;
 }
 
+.user-login {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+}
+
 .venues {
   display: flex;
   flex-direction: column;
@@ -147,4 +165,9 @@
   margin-top: 2rem;
   padding: 2px;
   width: 100%;
+}
+
+.welcome {
+  font-size: 1.2rem;
+  font-weight: bold;
 }

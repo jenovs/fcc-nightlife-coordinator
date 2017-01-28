@@ -85,6 +85,11 @@ app.get('/auth/twitter/callback',
   }
 );
 
+app.get('/auth/logout', (req, res) => {
+  req.logout();
+  res.redirect('/')
+})
+
 app.get('/api/venues/:addr', (req, res) => {
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(req.params.addr)}&key=${API_KEY}`
   let lat, lon;
