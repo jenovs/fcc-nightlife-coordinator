@@ -13,6 +13,13 @@ header {
   padding: 1rem;
 }
 
+.descr {
+  color: darkgray;
+  font-size: 3rem;
+  padding-top: 2rem;
+  text-align: center;
+}
+
 .header-div {
   color: #333;
   font-size: 2rem;
@@ -179,7 +186,7 @@ header {
 
 .searching {
   color: darkgray;
-  font-size: 5rem;
+  font-size: 3rem;
   padding-top: 2rem;
   text-align: center;
 }

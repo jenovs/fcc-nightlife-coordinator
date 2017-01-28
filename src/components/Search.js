@@ -35,12 +35,17 @@ export default class Search extends React.Component {
     if (this.state.search) this.props.submitSearch(this.state.search, e.nativeEvent.target.value);
   }
 
+  // handleClick(e) {
+  //   console.log('click');
+  //
+  // }
+
   render() {
     const { venueType } = this.state;
     return (
       <div className="search-div">
         <form onSubmit={this.handleSubmit}>
-          <input onChange={this.handleChange} value={this.state.search} autoFocus placeholder="Enter address to search..."/>
+          <input onChange={this.handleChange} onMouseDown={this.props.clearNoResults} value={this.state.search} autoFocus placeholder="Enter address to search..."/>
           <button className="btn-search"> &#128270;</button>
           <div className="radios-div" onChange={this.submitOnRadio}>
             <input id="cafe" type="radio" name="venueType" value="cafe" checked={venueType === 'cafe'} onChange={f => f} />

@@ -15,7 +15,7 @@ export default class Venues extends React.Component {
           key={id}
           data={venue}
           handleAttend={this.handleAttend.bind(this, venue.venueId, venue.venueName)}
-          user={this.props.user}
+          username={this.props.username}
         />
       )
     })
@@ -25,7 +25,7 @@ export default class Venues extends React.Component {
     if (this.props.searching) {
       return (
         <div className="searching">
-          <p>Loading...</p>
+          <p>Loading {this.props.venueType}s in <span style={{'textTransform': 'capitalize'}}>{this.props.search}</span>...</p>
         </div>
       )
     } else if (!this.props.searching && this.props.noResults) {
@@ -34,9 +34,12 @@ export default class Venues extends React.Component {
           <p>Nothing found :(</p>
         </div>
       )
-    }
-
-    else {
+    } else if (!this.props.venues.length) {
+      return (
+        <div className="descr">
+          <p>Search a cafe, gym or a park and see who's attending.</p>
+        </div>)
+    } else {
       return (
         <div className="venues">
           {this.mapVenues()}

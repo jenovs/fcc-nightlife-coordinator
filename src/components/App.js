@@ -18,17 +18,13 @@ export default class App extends React.Component {
 
     this.handleSearch = this.handleSearch.bind(this);
     this.handleAttend = this.handleAttend.bind(this);
+    this.clearNoResults = this.clearNoResults.bind(this);
   }
 
   componentWillMount() {
     const storage = JSON.parse(sessionStorage.getItem('search'));
     let search, venueType;
-    // console.log(x);
     if (storage) ({ search, venueType } = storage);
-    // const { search, venueType } = JSON.parse(sessionStorage.getItem('search')) ;
-    // const str = JSON.parse(sessionStorage.getItem('search')).search;
-    // const venueType =
-    // console.log(search, venueType);
     if (search) this.handleSearch(search, venueType)
     fetch('/api/checkAuth', {
       credentials: 'include'
@@ -67,6 +63,12 @@ export default class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+  clearNoResults() {
+    this.setState({
+      noResults: false
+    })
+  }
+
   fetchAttendees() {
     fetch(`/api/attendees/`, {
       headers: {
@@ -102,12 +104,11 @@ export default class App extends React.Component {
         <Header user={this.state.username} />
         <Search submitSearch={this.handleSearch}
           search={this.state.search}
-          venueType={this.state.venueType}/>
-        <Venues searching={this.state.searching}
-          noResults={this.state.noResults}
-          venues={this.state.venues}
+          venueType={this.state.venueType}
+          clearNoResults={this.clearNoResults}/>
+        <Venues {...this.state}
           handleAttend={this.handleAttend}
-          user={this.state.username}/>
+        />
       </div>
     )
   }

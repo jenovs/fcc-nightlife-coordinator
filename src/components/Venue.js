@@ -7,7 +7,7 @@ export default class Venue extends React.Component {
     this.state = {
       imgSrc: null,
       imgClass: 'img-venue loading',
-      user: this.props.user,
+      username: this.props.username,
       attending: false
     }
   }
@@ -30,8 +30,8 @@ export default class Venue extends React.Component {
 
   componentWillReceiveProps(newProps) {
     // console.log('receiving props');
-    if (newProps.user) {
-      const ind = newProps.data.attendees.indexOf(newProps.user);
+    if (newProps.username) {
+      const ind = newProps.data.attendees.indexOf(newProps.username);
       if (ind !== -1) this.setState({attending: true})
       else this.setState({attending: false})
       // console.log('index in attendees', ind);
@@ -42,7 +42,7 @@ export default class Venue extends React.Component {
   render() {
     // console.log('state', this.state.attending);
     const { venueName, venueAddress, imgRef, imgSrc, rating, attendees } = this.props.data;
-    const user = this.props.user;
+    const username = this.props.username;
     const attending = this.state.attending;
     const handleAttend = this.props.handleAttend;
 
@@ -66,7 +66,7 @@ export default class Venue extends React.Component {
               {imgRef && <span>Photo by: <span dangerouslySetInnerHTML={{__html: imgRef}}></span></span>}
             </div>
             <div>
-              {this.props.user ?
+              {this.props.username ?
                 <button className={btnClass} onClick={this.props.handleAttend}>{this.state.attending ? 'Remove' : 'Attend'}</button>:
                 <a className="btn btn-primary" href="/auth/twitter">Attend</a>
               }
