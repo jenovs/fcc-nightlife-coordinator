@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Footer from './Footer';
 import Search from './Search';
 import Venues from './Venues';
 import Header from './Header';
@@ -99,16 +100,15 @@ export default class App extends React.Component {
   render() {
     console.log('App state', this.state);
     return (
-      <div>
-
+      <div className="container">
         <Header user={this.state.username} />
         <Search submitSearch={this.handleSearch}
           search={this.state.search}
           venueType={this.state.venueType}
-          clearNoResults={this.clearNoResults}/>
+          clearNoResults={this.clearNoResults} />
         <Venues {...this.state}
-          handleAttend={this.handleAttend}
-        />
+          handleAttend={this.handleAttend} />
+        <Footer />
       </div>
     )
   }

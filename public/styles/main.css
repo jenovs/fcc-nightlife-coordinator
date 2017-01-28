@@ -1,7 +1,33 @@
+html,
+body {
+  height: 100%;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/*body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}*/
+
+footer {
+  background-color: lightgray;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+  /*height: 10rem;*/
+  padding: 1rem 0;
+  text-align: center;
+}
+
+footer a, a:hover, a:active {
+  color: blue;
+  text-decoration: none;
 }
 
 header {
@@ -11,6 +37,65 @@ header {
   margin: auto;
   max-width: 70rem;
   padding: 1rem;
+  width: 100%;
+}
+
+.btn {
+  display: inline-block;
+  background-color: gray;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  width: 5rem;
+  margin-left: auto;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.btn-danger {
+  background-color: #d9534f;
+  border: 1px solid #d43f3a;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c;
+  border: 1px solid #ac2925;
+}
+
+.btn-primary {
+  align-self: flex-end;
+  background-color: #337ab7;
+  border: 1px solid #2e6da4;
+}
+
+.btn-primary:hover {
+  background-color: #286090;
+  border: 1px solid #204d74;
+  text-decoration: none;
+}
+
+.btn-search {
+  background-color: transparent;
+  border: none;
+  color: #222;
+  font-size: 1.5rem;
+  outline: none;
+}
+
+.btn-search:focus {
+  text-shadow: 1px 1px 2px cornflowerblue;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  /*align-items: center;*/
+  min-height: 100vh;
 }
 
 .descr {
@@ -22,10 +107,11 @@ header {
 
 .header-div {
   color: #333;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 1rem auto;
   text-align: center;
+  width: 100%;
 }
 
 .img-venue {
@@ -102,56 +188,6 @@ header {
   font-weight: bold;
 }
 
-.btn {
-  display: inline-block;
-  background-color: gray;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  flex: 1;
-  font-size: 14px;
-  width: 5rem;
-  margin-left: auto;
-  padding: 6px 12px;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-}
-
-.btn-danger {
-  background-color: #d9534f;
-  border: 1px solid #d43f3a;
-}
-
-.btn-danger:hover {
-  background-color: #c9302c;
-  border: 1px solid #ac2925;
-}
-
-.btn-primary {
-  align-self: flex-end;
-  background-color: #337ab7;
-  border: 1px solid #2e6da4;
-}
-
-.btn-primary:hover {
-  background-color: #286090;
-  border: 1px solid #204d74;
-  text-decoration: none;
-}
-
-.btn-search {
-  background-color: transparent;
-  border: none;
-  color: #222;
-  font-size: 1.5rem;
-  outline: none;
-}
-
-.btn-search:focus {
-  text-shadow: 1px 1px 2px cornflowerblue;
-}
 
 .photo-attribute {
   font-size: 0.8rem;
@@ -195,6 +231,7 @@ header {
   align-items: flex-end;
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 
 .venues {
@@ -204,6 +241,7 @@ header {
   margin-top: 2rem;
   padding: 2px;
   width: 100%;
+  flex: 1;
 }
 
 .welcome {
