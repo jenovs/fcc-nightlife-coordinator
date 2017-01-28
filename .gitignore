@@ -3,4 +3,6 @@ playground
 
 public/js/bundle.js
 config/config.json
+
 credentials.js
+npm-debug.log

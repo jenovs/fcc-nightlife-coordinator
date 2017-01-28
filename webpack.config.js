@@ -1,7 +1,12 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-  entry: path.join(__dirname, 'src', 'app.js'),
+  entry: [
+    // fetch polyfill to support iOS
+    'whatwg-fetch',
+    path.join(__dirname, 'src', 'app.js')
+  ],
 
   output: {
     path: path.join(__dirname, 'public', 'js'),
@@ -16,5 +21,12 @@ module.exports = {
         presets: ['es2015', 'react']
       }
     }]
-  }
+  },
+
+  plugins: [
+    new webpack.ProvidePlugin({
+      // fetch polyfill to support iOS
+      'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch'
+    })
+  ]
 };
