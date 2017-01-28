@@ -169,12 +169,16 @@ app.post('/api/attend/:venueId', checkAuth, (req, res) => {
         } else {
           data.attendees.push(req.session.passport.user[1])
         }
-        const updatedData = {
-          venueId: data.venueId,
-          venueName: data.venueName,
-          attendees: data.attendees
+        if (data.attendees.length) {
+          const updatedData = {
+            venueId: data.venueId,
+            venueName: data.venueName,
+            attendees: data.attendees
+          }
+          return Venue.findOneAndUpdate({venueId: data.venueId}, updatedData)
+        } else {
+          return Venue.findOneAndRemove({venueId: data.venueId})
         }
-        return Venue.findOneAndUpdate({venueId: data.venueId}, updatedData)
       }
     })
     .then(() => res.send())
