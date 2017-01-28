@@ -46,18 +46,6 @@ export default class Venue extends React.Component {
     const attending = this.state.attending;
     const handleAttend = this.props.handleAttend;
 
-    function generateButton() {
-      console.log(user);
-      if (user) {
-        if (attending) {
-          return (<button className="btn btn-primary" onClick={handleAttend}>Attend1</button>)
-        } else {
-          return (<button className="btn btn-primary" onClick={handleAttend}>Attend2</button>)
-        }
-      } else {
-        return (<a className="btn btn-primary" href="/auth/twitter">Attend3</a>)
-      }
-    }
     const btnClass = this.state.attending ? 'btn btn-danger' : 'btn btn-primary'
     return (
       <div className="venue-container">
@@ -70,14 +58,14 @@ export default class Venue extends React.Component {
             {venueAddress}
           </div>
           <div className="will-attend">
-            {attendees.length}{attendees.length === 1 ? ' is' : ' are' } going.
+            {/* {attendees.length}{attendees.length === 1 ? ' is' : ' are' } going. */}
+            {attendees.length} will attend.
           </div>
           <div className="attr-data">
             <div className="photo-attribute">
               {imgRef && <span>Photo by: <span dangerouslySetInnerHTML={{__html: imgRef}}></span></span>}
             </div>
             <div>
-              {/* {generateButton()} */}
               {this.props.user ?
                 <button className={btnClass} onClick={this.props.handleAttend}>{this.state.attending ? 'Remove' : 'Attend'}</button>:
                 <a className="btn btn-primary" href="/auth/twitter">Attend</a>

@@ -41,7 +41,7 @@ export default class Search extends React.Component {
       <div className="search-div">
         <form onSubmit={this.handleSubmit}>
           <input onChange={this.handleChange} value={this.state.search} autoFocus placeholder="Enter address to search..."/>
-          <button className="btn-search">&#128270;</button>
+          <button className="btn-search"> &#128270;</button>
           <div className="radios-div" onChange={this.submitOnRadio}>
             <input id="cafe" type="radio" name="venueType" value="cafe" checked={venueType === 'cafe'} onChange={f => f} />
             <label htmlFor="cafe">Cafe</label>

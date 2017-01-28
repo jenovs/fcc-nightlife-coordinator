@@ -28,7 +28,15 @@ export default class Venues extends React.Component {
           <p>Loading...</p>
         </div>
       )
-    } else {
+    } else if (!this.props.searching && this.props.noResults) {
+      return (
+        <div className="searching">
+          <p>Nothing found :(</p>
+        </div>
+      )
+    }
+
+    else {
       return (
         <div className="venues">
           {this.mapVenues()}

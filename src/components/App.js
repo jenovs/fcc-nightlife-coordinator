@@ -9,6 +9,7 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
+      noResults: false,
       search: '',
       venues: [],
       searching: false,
@@ -41,6 +42,7 @@ export default class App extends React.Component {
     this.setState({
       venueType,
       search,
+      noResults: false,
       venues: [],
       searching: true,
     });
@@ -48,11 +50,19 @@ export default class App extends React.Component {
     fetch(`/api/venues/${search}/${venueType}`)
       .then(res => res.json())
       .then(json => {
-        console.log('setting search data');
-        this.setState({
-          venues: json,
-          searching: false
-        }, this.fetchAttendees)
+        if (!json.error) {
+          console.log('setting search data');
+          this.setState({
+            venues: json,
+            searching: false
+          }, this.fetchAttendees)
+        } else {
+          console.log('nothing found :(');
+          this.setState({
+            noResults: true,
+            searching: false
+          })
+        }
       })
       .catch(err => console.log(err));
   }
@@ -94,6 +104,7 @@ export default class App extends React.Component {
           search={this.state.search}
           venueType={this.state.venueType}/>
         <Venues searching={this.state.searching}
+          noResults={this.state.noResults}
           venues={this.state.venues}
           handleAttend={this.handleAttend}
           user={this.state.username}/>

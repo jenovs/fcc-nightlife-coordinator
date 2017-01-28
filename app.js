@@ -88,7 +88,7 @@ app.get('/auth/twitter/callback',
 app.get('/auth/logout', (req, res) => {
   req.logout();
   res.redirect('/')
-})
+});
 
 app.get('/api/venues/:addr/:venueType', (req, res) => {
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(req.params.addr)}&key=${API_KEY}`
@@ -96,9 +96,14 @@ app.get('/api/venues/:addr/:venueType', (req, res) => {
   fetch(url)
     .then(resp => resp.json())
     .then(data => {
-      lat = data.results[0].geometry.location.lat;
-      lon = data.results[0].geometry.location.lng;
-      return {lat, lon}
+      console.log(data.status);
+      if (data.status === 'OK') {
+        lat = data.results[0].geometry.location.lat;
+        lon = data.results[0].geometry.location.lng;
+        return {lat, lon}
+      } else if (data.status === 'ZERO_RESULTS') {
+        throw Error('ZERO_RESULTS')
+      }
     })
     .then(coords => {
       return googleMapsClient.placesNearby({
@@ -124,6 +129,10 @@ app.get('/api/venues/:addr/:venueType', (req, res) => {
       })
       res.send(results)
     })
+    .catch(err => {
+      res.send({error: 'ZERO_RESULTS'})
+      console.log(err);
+    });
 });
 
 app.get('/api/fetchImg/:id', (req, res) => {
